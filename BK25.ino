@@ -336,7 +336,7 @@ boolean MachineStateChanged = true;
 #define SOUND_EFFECT_VP_GOOD_SHOT_2                               418
 #define SOUND_EFFECT_VP_GOOD_SHOT_3                               419
 #define SOUND_EFFECT_VP_FIGHT_AGAIN                               420
-#define SOUND_EFFECT_VP_SHOOT_AGAIN                               421
+//#define SOUND_EFFECT_VP_SHOOT_AGAIN                               421
 #define SOUND_EFFECT_VP_CURRENT_JACKPOT                           422
 #define SOUND_EFFECT_VP_GAME_RULES_EASY                           423
 #define SOUND_EFFECT_VP_GAME_RULES_MEDIUM                         424
@@ -1346,10 +1346,12 @@ void ShowPlayfieldXAndMagnetLamps() {
     RPU_SetLampState(LAMP_RIGHT_MAGNASAVE, 0);
   } else {
     int leftFlash, rightFlash;
-    if (MagnaStatusLeft[CurrentPlayer] <= 1000) leftFlash = 0;
-    else leftFlash = 1000 - MagnaStatusLeft[CurrentPlayer] / 10;
-    if (MagnaStatusRight[CurrentPlayer] <= 1000) rightFlash = 0;
-    else rightFlash = 1000 - MagnaStatusRight[CurrentPlayer] / 10;
+    if (MagnaStatusLeft[CurrentPlayer] <= 1000) leftFlash = 175;
+    else leftFlash = MagnaStatusLeft[CurrentPlayer] / 5;
+    if (MagnaStatusRight[CurrentPlayer] <= 1000) rightFlash = 175;
+    else rightFlash = MagnaStatusRight[CurrentPlayer] / 5;
+    if (leftFlash>=1000) leftFlash = 0;
+    if (rightFlash>=1000) rightFlash = 0;
     RPU_SetLampState(LAMP_LEFT_MAGNASAVE, MagnaStatusLeft[CurrentPlayer], 0, leftFlash);
     RPU_SetLampState(LAMP_RIGHT_MAGNASAVE, MagnaStatusRight[CurrentPlayer], 0, rightFlash);
   }

@@ -183,8 +183,11 @@ void ShowAnimatedValue(byte displayNum, unsigned long displayScore, byte animati
         RPU_SetDisplayBlank(displayNum, displayMask);
       }
     }
-  } else if (animationType == DISPLAY_OVERRIDE_ANIMATION_CENTER) {
-    overrideAnimationSeed = CurrentTime / 250;
+  } else if ( animationType == DISPLAY_OVERRIDE_ANIMATION_CENTER ||
+              animationType == DISPLAY_OVERRIDE_CENTER_FLASH_SLOW || 
+              animationType == DISPLAY_OVERRIDE_CENTER_FLASH_FAST ) {
+    overrideAnimationSeed = CurrentTime / 175;
+    if (animationType==DISPLAY_OVERRIDE_CENTER_FLASH_FAST) overrideAnimationSeed = CurrentTime / 75;
     if (overrideAnimationSeed != LastAnimationSeed[displayNum]) {
       LastAnimationSeed[displayNum] = overrideAnimationSeed;
       byte shiftDigits = (RPU_OS_NUM_DIGITS - numDigits) / 2;
@@ -197,7 +200,14 @@ void ShowAnimatedValue(byte displayNum, unsigned long displayScore, byte animati
       }
       //RPU_SetDisplayBlank(displayNum, 0x00);
       RPU_SetDisplay(displayNum, displayScore, false);
-      RPU_SetDisplayBlank(displayNum, displayMask);
+
+      if (animationType == DISPLAY_OVERRIDE_ANIMATION_CENTER) {
+        RPU_SetDisplayBlank(displayNum, displayMask);
+      } else {
+        boolean flashOn = (overrideAnimationSeed%2) ? true : false;
+        if (flashOn) RPU_SetDisplayBlank(displayNum, displayMask);
+        else RPU_SetDisplayBlank(displayNum, 0x00);
+      }
     }
   } else if (numDigits==1 && animationType == DISPLAY_OVERRIDE_SYMMETRIC_BOUNCE) {
     // Timing varies based on display

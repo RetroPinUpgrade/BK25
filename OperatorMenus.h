@@ -92,6 +92,7 @@ class OperatorMenus
     void    SetLampsLookupCallback(byte (*lampLookup)(byte));
     void    SetSolenoidIDLookupCallback(unsigned short (*solenoidIDLookup)(byte));
     void    SetSolenoidStrengthLookupCallback(byte (*solenoidStrengthLookup)(byte));
+    void    SetSoundCallbackFunction(byte (*soundCallback)(byte));
     int     UpdateMenu(unsigned long currentTime);    
 
   private:
@@ -146,6 +147,7 @@ class OperatorMenus
 
     byte (*LampLookupFunction)(byte);
     byte (*SolenoidStrengthLookupFunction)(byte);
+    byte (*SoundTestCallback)(byte);
     unsigned short (*SolenoidIDLookupFunction)(byte);
 };
 

@@ -104,6 +104,7 @@ OperatorMenus::OperatorMenus() {
   LampLookupFunction = DefaultLampLookup;
   SolenoidIDLookupFunction = DefaultSolenoidIDLookup;
   SolenoidStrengthLookupFunction = DefaultSolenoidStrengthLookup;
+  SoundTestCallback = NULL;
 }
 
 
@@ -115,6 +116,11 @@ boolean OperatorMenus::OperatorMenusActive() {
 void OperatorMenus::SetLampsLookupCallback(byte (*lampLookup)(byte)) {
   LampLookupFunction = lampLookup;
 }
+
+void OperatorMenus::SetSoundCallbackFunction(byte (*soundCallback)(byte)) {
+  SoundTestCallback = soundCallback;
+}
+
 
 void OperatorMenus::SetSolenoidIDLookupCallback(unsigned short (*solenoidIDLookup)(byte)) {
   SolenoidIDLookupFunction = solenoidIDLookup;
@@ -521,6 +527,14 @@ void OperatorMenus::HandleEnterButton(boolean doubleClick, boolean resetHeld, bo
         CycleTest = true; 
         TestDelay = 1;
       }
+    } else if (SubLevel==OPERATOR_MENU_TEST_SOUNDS) {
+      if (SoundTestCallback!=NULL) {
+        if (SoundTestCallback(LastTestValue)==0) {
+          LastTestValue = 0;
+        } else {
+          LastTestValue += 1;
+        }
+      }
     }
   } else if (TopLevel==OPERATOR_MENU_AUDITS_MENU) {
     if (AdjustmentType==OPERATOR_MENU_AUD_CLEARABLE) {
@@ -788,6 +802,8 @@ void OperatorMenus::UpdateSelfTest(unsigned long currentTime) {
         if (SavedValue>10) TestDelay = 5;
       }
     }
+  } else {
+//    LastTestValue = 0;
   }
 }
 
@@ -831,6 +847,7 @@ void OperatorMenus::StartTestMode(unsigned long currentTime) {
     LastTestValue = 0;
     RPU_SetDisplayBallInPlay(0, false);
   } else if (SubLevel==OPERATOR_MENU_TEST_SOUNDS) {
+    LastTestValue = 0;
     for (byte count=0; count<RPU_NUMBER_OF_PLAYER_DISPLAYS; count++) {
       RPU_SetDisplayBlank(count, 0x00);
     }

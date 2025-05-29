@@ -167,7 +167,8 @@ void ShowLampAnimation(byte animationNum, unsigned long divisor, unsigned long b
 
 void ShowLampAnimationSingleStep(byte animationNum, byte currentStep, byte *lampsToAvoid = NULL) {
   if (animationNum>=NUM_LAMP_ANIMATIONS) return;
-  
+  if (currentStep>=LAMP_ANIMATION_STEPS) return;
+
   byte lampNum = 0;
   byte *currentLampByte = LampAnimations[animationNum][currentStep];
   byte *currentAvoidByte = lampsToAvoid;
@@ -194,6 +195,7 @@ void ShowLampAnimationSingleStep(byte animationNum, byte currentStep, byte *lamp
 
 void FlashAnimationSteps(byte animationNum, byte startStep, int flashSpeed) {
   if (animationNum>=NUM_LAMP_ANIMATIONS) return;
+  if (startStep>=LAMP_ANIMATION_STEPS) return;
   
   byte lampNum = 0;
   byte *currentLampByte = LampAnimations[animationNum][startStep];
