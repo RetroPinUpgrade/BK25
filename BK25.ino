@@ -30,7 +30,7 @@
 
 #define USE_SCORE_OVERRIDES
 #define BK_MAJOR_VERSION  2025
-#define BK_MINOR_VERSION  1
+#define BK_MINOR_VERSION  2
 #define DEBUG_MESSAGES  1
 
 /*********************************************************************
