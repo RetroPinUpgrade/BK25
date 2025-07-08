@@ -1530,6 +1530,7 @@ void RPU_UpdateTimedSolenoidStack(unsigned long curTime) {
 
 #if (RPU_MPU_ARCHITECTURE<10)
 
+// RPU_MPU_ARCHITECTURE < 10
 void RPU_SetCoinLockout(boolean lockoutOff, byte solbit) {
   if (!lockoutOff) {
     CurrentSolenoidByte = CurrentSolenoidByte & ~solbit;
@@ -1540,6 +1541,7 @@ void RPU_SetCoinLockout(boolean lockoutOff, byte solbit) {
 }
 
 
+// RPU_MPU_ARCHITECTURE < 10
 void RPU_SetDisableFlippers(boolean disableFlippers, byte solbit) {
   if (disableFlippers) {
     CurrentSolenoidByte = CurrentSolenoidByte | solbit;
@@ -1550,10 +1552,12 @@ void RPU_SetDisableFlippers(boolean disableFlippers, byte solbit) {
   RPU_DataWrite(ADDRESS_U11_B, CurrentSolenoidByte);
 }
 
+// RPU_MPU_ARCHITECTURE < 10
 boolean RPU_GetDisableFlippers(byte solbit) {
   return  (CurrentSolenoidByte & solbit) ? true : false;
 }
 
+// RPU_MPU_ARCHITECTURE < 10
 void RPU_SetContinuousSolenoidBit(boolean bitOn, byte solbit) {
   if (bitOn) {
     CurrentSolenoidByte = CurrentSolenoidByte | solbit;
@@ -1565,6 +1569,7 @@ void RPU_SetContinuousSolenoidBit(boolean bitOn, byte solbit) {
 
 
 
+// RPU_MPU_ARCHITECTURE < 10
 boolean RPU_FireContinuousSolenoid(byte solBit, byte numCyclesToFire) {
   if (NumCyclesBeforeRevertingSolenoidByte) return false;
 
@@ -1576,25 +1581,30 @@ boolean RPU_FireContinuousSolenoid(byte solBit, byte numCyclesToFire) {
 }
 
 
+// RPU_MPU_ARCHITECTURE < 10
 byte RPU_ReadContinuousSolenoids() {
   return RPU_DataRead(ADDRESS_U11_B);
 }
 
 
+// RPU_MPU_ARCHITECTURE < 10
 void RPU_DisableSolenoidStack() {
   SolenoidStackEnabled = false;
 }
 
 
+// RPU_MPU_ARCHITECTURE < 10
 void RPU_EnableSolenoidStack() {
   SolenoidStackEnabled = true;
 }
 
+// RPU_MPU_ARCHITECTURE < 10
 boolean RPU_IsSolenoidStackEnabled() {
   return SolenoidStackEnabled;
 }
 
 #elif (RPU_MPU_ARCHITECTURE>=10)
+// RPU_MPU_ARCHITECTURE >= 10
 void RPU_SetDisableFlippers(boolean disableFlippers, byte solbit) {
   (void)solbit;
   GameOverLine = disableFlippers;
@@ -1602,12 +1612,14 @@ void RPU_SetDisableFlippers(boolean disableFlippers, byte solbit) {
   else RPU_DataWrite(PIA_SOLENOID_CONTROL_B, 0x3C);
 }
 
+// RPU_MPU_ARCHITECTURE >= 10
 boolean RPU_GetDisableFlippers(byte solbit) {
   (void)solbit;
   return GameOverLine;
 }
 
 
+// RPU_MPU_ARCHITECTURE >= 10
 void RPU_SetContinuousSolenoid(boolean solOn, byte solNum) {
   unsigned short oldCont = ContinuousSolenoidBits;
   if (solOn) ContinuousSolenoidBits |= (1 << solNum);
@@ -1621,26 +1633,31 @@ void RPU_SetContinuousSolenoid(boolean solOn, byte solNum) {
   }
 }
 
+// RPU_MPU_ARCHITECTURE >= 10
 byte RPU_ReadContinuousSolenoids() {
   return ContinuousSolenoidBits;
 }
 
 
+// RPU_MPU_ARCHITECTURE >= 10
 void RPU_SetCoinLockout(boolean lockoutOn, byte solNum) {
   RPU_SetContinuousSolenoid(!lockoutOn, solNum);
 }
 
+// RPU_MPU_ARCHITECTURE >= 10
 void RPU_DisableSolenoidStack() {
   SolenoidStackEnabled = false;
   RPU_DataWrite(PIA_SOLENOID_CONTROL_B, 0x34);
 }
 
 
+// RPU_MPU_ARCHITECTURE >= 10
 void RPU_EnableSolenoidStack() {
   SolenoidStackEnabled = true;
   RPU_DataWrite(PIA_SOLENOID_CONTROL_B, 0x3C);
 }
 
+// RPU_MPU_ARCHITECTURE >= 10
 boolean RPU_IsSolenoidStackEnabled() {
   return SolenoidStackEnabled;
 }
@@ -3458,7 +3475,7 @@ byte BlankingBit[16] = {0x01, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x02, 0x
 volatile byte UpDownPassCounter = 0;
 
 // INTERRUPT HANDLER
-// for ARCH 10 (WMS)
+// for ARCH>=10 (WMS)
 ISR(TIMER1_COMPA_vect) {    //This is the interrupt request (running at 965.3 Hz)
 
   byte displayControlPortB = RPU_DataRead(PIA_DISPLAY_CONTROL_B);
@@ -3562,8 +3579,10 @@ ISR(TIMER1_COMPA_vect) {    //This is the interrupt request (running at 965.3 Hz
   }
   // Show current display digit
   //  if (RPU_DataRead(PIA_DISPLAY_CONTROL_B) & 0x80) SawInterruptOnDisplayPortB1 = true;
-  RPU_DataWrite(PIA_DISPLAY_PORT_A, BoardLEDs | DisplayStrobe);
+  RPU_DataWrite(PIA_DISPLAY_PORT_A, /*BoardLEDs | */DisplayStrobe);
+  RPU_DataWrite(PIA_DISPLAY_PORT_B, 0xFF);
   RPU_DataWrite(PIA_DISPLAY_PORT_B, digit1 * 16 | (digit2 & 0x0F));
+
 #endif
 
   DisplayStrobe += 1;

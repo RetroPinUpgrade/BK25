@@ -2213,6 +2213,7 @@ unsigned long SoundTestStart;
 unsigned long LastSaucerEjectTime = 0;
 unsigned long LastUpperLockEjectTime = 0;
 byte SoundTestSequence;
+unsigned short RestoreBackgroundTrack = BACKGROUND_TRACK_NONE;
 #ifdef RPU_OS_USE_ACCESSORY_LAMP_BOARD
 byte ALBCurrentBrightness;
 #endif
@@ -2273,6 +2274,9 @@ void RunOperatorMenu() {
   if (Menus.HasTopLevelChanged()) {
     // Play an audio prompt for the top level
     SoundTestStart = 0;
+    if (Audio.GetBackgroundSong()!=BACKGROUND_TRACK_NONE) {
+      RestoreBackgroundTrack = Audio.GetBackgroundSong();
+    }
     Audio.StopAllAudio();
 #ifdef RPU_OS_USE_ACCESSORY_LAMP_BOARD
     TopperALB.StopAnimation();
@@ -7192,6 +7196,10 @@ void loop() {
   if (Menus.OperatorMenusActive()) {
     RunOperatorMenu();
   } else {
+    if (RestoreBackgroundTrack!=BACKGROUND_TRACK_NONE) {
+      PlayBackgroundSong(RestoreBackgroundTrack);
+      RestoreBackgroundTrack = BACKGROUND_TRACK_NONE;
+    }
     if (MachineState < 0) {
       newMachineState = 0;
     } else if (MachineState == MACHINE_STATE_ATTRACT) {

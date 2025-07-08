@@ -332,7 +332,6 @@ void wavTrigger::trackLoad(int trk, bool lock) {
 
 // **************************************************************
 void wavTrigger::trackStop(int trk) {
-
   trackControl(trk, TRK_STOP);
 }
 
@@ -394,7 +393,6 @@ uint8_t txbuf[9];
 void wavTrigger::stopAllTracks(void) {
 
 uint8_t txbuf[5];
-
   txbuf[0] = SOM1;
   txbuf[1] = SOM2;
   txbuf[2] = 0x05;

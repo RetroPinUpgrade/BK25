@@ -419,8 +419,13 @@ int OperatorMenus::UpdateMenu(unsigned long currentTime) {
             CurrentAdjustmentByte = NULL;
             CurrentAdjustmentUL = NULL;
           } else {
-            SubLevel += 1;
-            if (SubLevel>=NumSubLevels) SubLevel = 0;
+            if (RPU_GetUpDownSwitchState()) {
+              SubLevel += 1;
+              if (SubLevel>=NumSubLevels) SubLevel = 0;
+            } else {
+              if (SubLevel) SubLevel -= 1;
+              else SubLevel = (NumSubLevels-1);
+            }
           }
           SubLevelChanged = true;
           if (TopLevel==OPERATOR_MENU_SELF_TEST_MENU) StartTestMode(currentTime);
