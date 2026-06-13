@@ -25,12 +25,13 @@
 //    Coop mode
 //    HORSE mode
 //    * last chance should update lock status (not penalize)
+//    last chance during ball save kicked another ball
 //    
 //    
 
 #define USE_SCORE_OVERRIDES
 #define BK_MAJOR_VERSION  2025
-#define BK_MINOR_VERSION  2
+#define BK_MINOR_VERSION  3
 #define DEBUG_MESSAGES  1
 
 /*********************************************************************
@@ -1098,7 +1099,7 @@ void setup() {
 
   ReadStoredParameters();
 
-  if (initResult & RPU_RET_ORIGINAL_CODE_REQUESTED) {
+  if ((initResult & RPU_RET_ORIGINAL_CODE_REQUESTED) || (initResult & RPU_RET_HOST_NOT_DETECTED)) {
     delay(100);
 
 #ifdef RPU_OS_USE_ACCESSORY_LAMP_BOARD
@@ -1159,6 +1160,11 @@ void setup() {
   DropTargetsLR.DefineSwitch(1, SW_LR_DROP_2);
   DropTargetsLR.DefineSwitch(2, SW_LR_DROP_3);
   DropTargetsLR.DefineResetSolenoid(0, SOL_LR_DROP_RESET);
+
+  RPU_SetSolenoidDefaultPulse(SOL_LL_DROP_RESET, 50);
+  RPU_SetSolenoidDefaultPulse(SOL_LR_DROP_RESET, 50);
+  RPU_SetSolenoidDefaultPulse(SOL_UL_DROP_RESET, 50);
+  RPU_SetSolenoidDefaultPulse(SOL_UR_DROP_RESET, 50);
 
   //NumberOfComboDefinitions = InitBKCombosArray();
 
@@ -6117,7 +6123,7 @@ boolean HandleDropTarget(byte bankNum, byte switchHit) {
         if (NumDropTargetClears[CurrentPlayer][bankNum]==3) {
           if (bankNum==2) LastChanceStatus[CurrentPlayer] |= LAST_CHANCE_LEFT_QUALIFIED;
           if (bankNum==3) LastChanceStatus[CurrentPlayer] |= LAST_CHANCE_RIGHT_QUALIFIED;
-          if (bankNum<2 && NumDropTargetClears[CurrentPlayer][0]==3 && NumDropTargetClears[CurrentPlayer][1]==3) {
+          if (bankNum<2 && NumDropTargetClears[CurrentPlayer][0]>=3 && NumDropTargetClears[CurrentPlayer][1]>=3) {
             ExtraBallsOrSpecialAvailable[CurrentPlayer] |= EBS_UPPER_EXTRA_BALL_AVAILABLE;
           }
 

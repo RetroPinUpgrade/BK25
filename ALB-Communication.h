@@ -23,6 +23,12 @@
 #define ALB_COMMAND_WATCHDOG_TIMER_RESET          12
 #define ALB_COMMAND_STOP_ANIMATION_BY_AREA        13
 #define ALB_COMMAND_REQUEST_SETTING               14
+#define ALB_COMMAND_SET_LAMP_STATE                15
+#define ALB_COMMAND_FLASH_ALL_LAMPS               16
+#define ALB_COMMAND_TURN_OFF_ALL_LAMPS            17
+#define ALB_COMMAND_SET_DIM_DIVISOR               18
+#define ALB_COMMAND_ENABLE_BS_EMULATION           19
+#define ALB_COMMAND_DISABLE_BS_EMULATION          20
 #define ALB_COMMAND_ALL_LAMPS_OFF                 99
 
 #define ALB_ALL_ANIMATIONS                0xFF

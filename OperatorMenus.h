@@ -83,6 +83,7 @@ class OperatorMenus
     boolean HasParameterChanged();
     byte    GetParameterID();
     boolean BallEjectInProgress(boolean startBallEject = false);
+    void    SetCreditAndBIPRestore(byte creditRestore, byte bipRestore);
     unsigned short GetParameterCallout();
 
     void    SetParameterControls(   byte adjustmentType, byte numAdjustmentValues, byte *adjustmentValues,
@@ -93,6 +94,7 @@ class OperatorMenus
     void    SetSolenoidIDLookupCallback(unsigned short (*solenoidIDLookup)(byte));
     void    SetSolenoidStrengthLookupCallback(byte (*solenoidStrengthLookup)(byte));
     void    SetSoundCallbackFunction(byte (*soundCallback)(byte));
+    void    SetDisplayTestCallback(byte (*displayTestCallback)(byte, byte, byte));
     int     UpdateMenu(unsigned long currentTime);    
 
   private:
@@ -104,6 +106,8 @@ class OperatorMenus
     byte MenuButton;
     byte NumSubLevels;
     byte LastSwitchSeen;
+    byte CreditRestore;
+    byte BIPRestore;
     byte NumSpeedyChanges;
     short MenuButtonDebounce;
     boolean TopLevelChanged;
@@ -137,6 +141,10 @@ class OperatorMenus
     unsigned long NextSpeedyValueChange;
     unsigned long LastResetPress;
 
+    void StartSubMenu(unsigned long currentTime);
+    boolean AdvanceTopMenu(boolean moveForward);
+    boolean AdvanceSubMenu(boolean moveForward, boolean loopMenu, unsigned long currentTime);
+    
     void StartTestMode(unsigned long currentTime);
     void UpdateSelfTest(unsigned long currentTime);
     void ReadCurrentSwitches();
@@ -148,6 +156,7 @@ class OperatorMenus
     byte (*LampLookupFunction)(byte);
     byte (*SolenoidStrengthLookupFunction)(byte);
     byte (*SoundTestCallback)(byte);
+    byte (*DisplayTestCallback)(byte, byte, byte);
     unsigned short (*SolenoidIDLookupFunction)(byte);
 };
 

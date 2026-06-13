@@ -22,7 +22,7 @@
 #ifndef RPU_OS_H
 
 #define RPU_OS_MAJOR_VERSION  5
-#define RPU_OS_MINOR_VERSION  10
+#define RPU_OS_MINOR_VERSION  13
 
 struct PlayfieldAndCabinetSwitch {
   byte switchNum;
@@ -63,6 +63,7 @@ struct PlayfieldAndCabinetSwitch {
 #define RPU_RET_OPTION_NOT_SUPPORTED      0x0080
 #define RPU_RET_6800_DETECTED             0x0100
 #define RPU_RET_6802_OR_8_DETECTED        0x0200
+#define RPU_RET_HOST_NOT_DETECTED         0x0400
 #define RPU_RET_DIAGNOSTIC_REQUESTED      0x1000
 #define RPU_RET_SELECTOR_SWITCH_ON        0x2000
 #define RPU_RET_CREDIT_RESET_BUTTON_HIT   0x4000
@@ -101,6 +102,7 @@ void RPU_EnableSolenoidStack();
 boolean RPU_IsSolenoidStackEnabled();
 boolean RPU_PushToTimedSolenoidStack(byte solenoidNumber, byte numPushes, unsigned long whenToFire, boolean disableOverride = false);
 void RPU_UpdateTimedSolenoidStack(unsigned long curTime);
+void RPU_SetSolenoidDefaultPulse(byte solenoidNumber, byte pulseTimeMS);
 
 //   Displays
 byte RPU_SetDisplay(int displayNumber, unsigned long value, boolean blankByMagnitude=false, byte minDigits=2, boolean showCommasByMagnitude=false);
@@ -141,7 +143,7 @@ void RPU_PlaySB100Chime(byte soundByte);
 #endif 
 #endif
 
-#ifdef RPU_OS_USE_DASH51
+#if defined(RPU_OS_USE_DASH50) || defined(RPU_OS_USE_DASH51)
 void RPU_PlaySoundDash51(byte soundByte);
 #endif
 
